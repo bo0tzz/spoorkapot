@@ -32,3 +32,5 @@ spoor_kapot-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.idea/
+*.iml
