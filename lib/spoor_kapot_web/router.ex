@@ -20,8 +20,9 @@ defmodule SpoorKapotWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", SpoorKapotWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", SpoorKapotWeb do
+    pipe_through :api
+
+    post "/register", ApiController, :register
+  end
 end
