@@ -4,8 +4,8 @@ const vapidKey = JSON.parse(document.getElementById("vapid-key").text)
 
 function registerWorker () {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/assets/sw.js')
-            .then((registration) => registration.pushManager.subscribe({userVisibleOnly: true, ...vapidKey})
+        navigator.serviceWorker.ready.then(registration => {
+            registration.pushManager.subscribe({userVisibleOnly: true, ...vapidKey})
                 .then((subscription) => {
                     fetch("/api/register", {
                         method: "POST",
@@ -15,7 +15,9 @@ function registerWorker () {
                       body: JSON.stringify(subscription)
                     })
                 })
-            )
+        })
+
+        navigator.serviceWorker.register('/assets/sw.js', {scope: "../"}).then(console.log)
     }
 }
 

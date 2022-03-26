@@ -1,4 +1,14 @@
-console.log(self)
-self.addEventListener('activate', console.log)
-self.addEventListener('install', console.log)
-self.addEventListener('push', event => console.log(event.data.json()))
+self.addEventListener('install', () => self.skipWaiting())
+
+self.addEventListener('notificationclick', notificationEvent => {
+    notificationEvent.notification.close()
+    self.clients.openWindow(notificationEvent.notification.data.url)
+})
+
+self.addEventListener('push', pushEvent => {
+    data = pushEvent.data.json()
+    const title = data.title || "Spoor Kapot"
+    const url = data.url || "https://github.com/bo0tzz/spoorkapot"
+
+    self.registration.showNotification(title, {data: {url: url}})
+})
