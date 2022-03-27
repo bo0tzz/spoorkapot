@@ -1,23 +1,30 @@
 import "phoenix_html"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
+
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken } })
+
+liveSocket.connect()
 
 const vapidKey = JSON.parse(document.getElementById("vapid-key").text)
 
-function registerWorker () {
+function registerWorker() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(registration => {
-            registration.pushManager.subscribe({userVisibleOnly: true, ...vapidKey})
+            registration.pushManager.subscribe({ userVisibleOnly: true, ...vapidKey })
                 .then((subscription) => {
                     fetch("/api/register", {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json',
-                          },
-                      body: JSON.stringify(subscription)
+                        },
+                        body: JSON.stringify(subscription)
                     })
                 })
         })
 
-        navigator.serviceWorker.register('/assets/sw.js', {scope: "../"}).then(console.log)
+        navigator.serviceWorker.register('/assets/sw.js', { scope: "../" }).then(console.log)
     }
 }
 
