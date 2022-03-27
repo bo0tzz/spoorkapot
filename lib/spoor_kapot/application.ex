@@ -7,6 +7,9 @@ defmodule SpoorKapot.Application do
 
   @impl true
   def start(_type, _args) do
+    db_file = Application.fetch_env!(:spoor_kapot, :database_file)
+    {:ok, :subscriptions} = Pockets.open(:subscriptions, db_file, create?: true)
+
     children = [
       # Start the Telemetry supervisor
       SpoorKapotWeb.Telemetry,

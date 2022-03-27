@@ -45,7 +45,8 @@ defmodule SpoorKapot.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:tailwind, "~> 0.1", only: :dev},
-      {:web_push_encryption, "~> 0.3"}
+      {:web_push_encryption, "~> 0.3"},
+      {:pockets, "~> 0.1.0"}
     ]
   end
 

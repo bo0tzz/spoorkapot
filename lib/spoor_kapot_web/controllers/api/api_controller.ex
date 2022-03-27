@@ -3,7 +3,8 @@ defmodule SpoorKapotWeb.ApiController do
   use SpoorKapotWeb, :controller
 
   def register(conn, params) do
-    sub = SpoorKapot.Subscription.new(params)
+    {:ok, sub} = SpoorKapot.Subscription.new(params)
+    SpoorKapot.Subscription.store(sub)
     json(conn, %{})
   end
 end

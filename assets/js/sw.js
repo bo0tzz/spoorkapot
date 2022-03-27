@@ -8,7 +8,7 @@ self.addEventListener('notificationclick', notificationEvent => {
 self.addEventListener('push', pushEvent => {
     data = pushEvent.data.json()
     const title = data.title || "Spoor Kapot"
-    const url = data.url || "https://github.com/bo0tzz/spoorkapot"
+    const url = data.url || "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/"
 
     self.registration.showNotification(title, {data: {url: url}})
 })
