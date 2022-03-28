@@ -1,4 +1,4 @@
-defmodule SpoorKapot.Notifications do
+defmodule SpoorKapot.Monitor do
   require Logger
 
   @known_disruptions_filename "disruptions.bin"
@@ -59,9 +59,9 @@ defmodule SpoorKapot.Notifications do
     with folder <- Application.fetch_env!(:spoor_kapot, :database_folder),
          path <- Path.join(folder, @known_disruptions_filename),
          {:ok, bin} <- File.read(path) do
-      bin_to_term(bin)
+      :erlang.binary_to_term(bin)
     else
-      _ -> []
+      {:error, :enoent} -> []
     end
   end
 
@@ -70,14 +70,6 @@ defmodule SpoorKapot.Notifications do
          path <- Path.join(folder, @known_disruptions_filename),
          bin <- :erlang.term_to_binary(disruptions) do
       File.write!(path, bin)
-    end
-  end
-
-  defp bin_to_term(bin) do
-    try do
-      :erlang.binary_to_term(bin)
-    rescue
-      _ -> []
     end
   end
 end
