@@ -23,6 +23,6 @@ defmodule SpoorKapot.NsApi.Disruption do
     {:ok, %{body: body}} =
       SpoorKapot.NsApi.client() |> Tesla.get("/v3/disruptions", query: [isActive: true])
 
-    body
+    Enum.map(body, &new/1)
   end
 end
