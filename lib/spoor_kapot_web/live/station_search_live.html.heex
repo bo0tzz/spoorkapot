@@ -1,6 +1,6 @@
 <.form for={:none} phx-change="search" class="flex flex-col gap-2">
     <div>
-        <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="500" placeholder="Search..." />
+        <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="300" placeholder="Search..." />
 
         <%= if @search_results != [] do %>
             <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">

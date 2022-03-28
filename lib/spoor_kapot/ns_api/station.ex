@@ -9,4 +9,36 @@ defmodule SpoorKapot.NsApi.Station do
       normalized_name: Unicode.Transform.LatinAscii.transform(name)
     }
   end
+
+  def stations() do
+    ensure_loaded()
+
+    Pockets.to_stream(:stations)
+  end
+
+  def station(code) do
+    ensure_loaded()
+
+    Pockets.get(:stations, code)
+  end
+
+  defp ensure_loaded() do
+    if Pockets.size(:stations) == 0 do
+      load_stations()
+    end
+  end
+
+  defp load_stations() do
+    Pockets.new(:stations)
+
+    map =
+      File.read!("stations.json")
+      |> Jason.decode!()
+      |> Map.get("payload")
+      |> Enum.map(&SpoorKapot.NsApi.Station.new/1)
+      |> Enum.map(fn %{code: code} = station -> {code, station} end)
+      |> Enum.into(%{})
+
+    Pockets.merge(:stations, map)
+  end
 end

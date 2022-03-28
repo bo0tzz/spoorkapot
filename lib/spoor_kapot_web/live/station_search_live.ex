@@ -27,7 +27,7 @@ defmodule SpoorKapotWeb.StationSearchLive do
         %{"code" => code},
         %{assigns: %{selected_stations: selected}} = socket
       ) do
-    station = SpoorKapot.StationSearch.stations()[code]
+    station = SpoorKapot.NsApi.Station.station(code)
 
     assigns = [
       search_results: [],
@@ -49,4 +49,6 @@ defmodule SpoorKapotWeb.StationSearchLive do
 
     {:noreply, assign(socket, assigns)}
   end
+
+  def handle_event("submit", _, socket), do: {:noreply, socket} # Prevent form submit
 end

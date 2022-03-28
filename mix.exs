@@ -46,7 +46,7 @@ defmodule SpoorKapot.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tailwind, "~> 0.1", only: :dev},
       {:web_push_encryption, "~> 0.3"},
-      {:pockets, "~> 0.1.0"},
+      {:pockets, "~> 1.2"},
       {:seqfuzz, "~> 0.2.0"},
       {:unicode_transform, git: "https://github.com/bo0tzz/unicode_transform.git"},
       {:ex_fontawesome, "~> 0.7.1"}

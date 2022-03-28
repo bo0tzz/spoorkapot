@@ -1,5 +1,4 @@
 defmodule SpoorKapot.StationSearch do
-  @stations SpoorKapot.NsApi.load_stations()
   @seqfuzz_opts [
     sort: true,
     filter: true,
@@ -11,9 +10,8 @@ defmodule SpoorKapot.StationSearch do
   def find_stations(query) do
     normalized_query = Unicode.Transform.LatinAscii.transform(query)
 
-    Map.values(@stations)
+    SpoorKapot.NsApi.stations()
+    |> Enum.map(&elem(&1, 1))
     |> Seqfuzz.matches(normalized_query, & &1.normalized_name, @seqfuzz_opts)
   end
-
-  def stations(), do: @stations
 end
