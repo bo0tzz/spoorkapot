@@ -1,10 +1,12 @@
 defmodule SpoorKapot.NsApi.Disruption do
   alias SpoorKapot.NsApi.Disruption
 
-  defstruct [:id, :affected_stations]
+  defstruct [:id, :title, :affected_stations]
 
   def new(json) do
     id = json["id"]
+
+    title = get_in(json, ["timespans", Access.at(0), "situation", "label"])
 
     affected_stations =
       get_in(json, ["publicationSections", Access.at(0), "section", "stations"])
@@ -15,6 +17,7 @@ defmodule SpoorKapot.NsApi.Disruption do
 
     %Disruption{
       id: id,
+      title: title,
       affected_stations: affected_stations
     }
   end
