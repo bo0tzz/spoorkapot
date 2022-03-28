@@ -1,4 +1,4 @@
-defmodule SpoorKapotWeb.StationSearchLive do
+defmodule SpoorKapotWeb.MainPageLive do
   use SpoorKapotWeb, :live_view
   require Logger
 
@@ -65,7 +65,7 @@ defmodule SpoorKapotWeb.StationSearchLive do
   end
 
   def handle_event("set-focus", %{"key" => "Enter"}, socket) do
-    case Enum.at(socket.assigns.search_results, socket.assigns.current_focus) do
+    case focused_station(socket.assigns.search_results, socket.assigns.current_focus) do
       nil -> {:noreply, socket}
       station -> handle_event("pick", %{"code" => station.code}, socket)
     end
@@ -84,4 +84,7 @@ defmodule SpoorKapotWeb.StationSearchLive do
       </div>
     """
   end
+
+  # def focused_station(_, -1), do: nil
+  def focused_station(stations, index), do: Enum.at(stations, index)
 end

@@ -1,0 +1,26 @@
+<div class="flex m-6 justify-center">
+    <.form for={:none} phx-change="search" phx-submit="submit" class="flex flex-col gap-2">
+        <div phx-window-keydown="set-focus">
+            <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="300" placeholder="Search..." />
+
+            <%= if @search_results != [] do %>
+                <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
+                    <%= for {station, idx} <- Enum.with_index(@search_results) do %>
+                        <.search_item station={station} focused={idx == @current_focus} />
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+        <div>
+            <%= if @selected_stations != [] do %>
+                <%= for %{name: name, code: code} <- @selected_stations do %>
+                    <div class="btn btn-sm rounded-full gap-2" phx-click="remove" phx-value-code={code}>
+                        <FontAwesome.LiveView.icon name="xmark" type="solid" class="h-6 w-6" />
+                        <%= name %>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+    </.form>
+    <button class="btn btn-primary" id="foo-button">Do the thing</button>
+</div>

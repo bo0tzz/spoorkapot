@@ -17,7 +17,7 @@ defmodule SpoorKapotWeb.Router do
   scope "/", SpoorKapotWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    live "/", MainPageLive
   end
 
   scope "/api", SpoorKapotWeb do
