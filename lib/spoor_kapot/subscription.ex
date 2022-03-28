@@ -1,4 +1,6 @@
 defmodule SpoorKapot.Subscription do
+  require Logger
+
   defstruct [:stations, :push]
 
   def new(%{
@@ -25,6 +27,11 @@ defmodule SpoorKapot.Subscription do
 
   def store(%SpoorKapot.Subscription{push: %{endpoint: endpoint}} = sub) do
     Pockets.put(:subscriptions, endpoint, sub)
+  end
+
+  def delete(endpoint) do
+    Logger.debug("Deleting subscription: #{endpoint}")
+    Pockets.delete(:subscriptions, endpoint)
   end
 
   def all() do
