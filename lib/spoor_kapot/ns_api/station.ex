@@ -23,9 +23,18 @@ defmodule SpoorKapot.NsApi.Station do
   end
 
   defp ensure_loaded() do
-    if Pockets.size(:stations) == 0 do
-      load_stations()
+    case Pockets.size(:stations) do
+      :undefined ->
+        Pockets.Registry.unregister(:stations)
+        true
+
+      0 ->
+        true
+
+      _ ->
+        false
     end
+    |> if(do: load_stations())
   end
 
   defp load_stations() do
