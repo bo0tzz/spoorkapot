@@ -1,22 +1,25 @@
-<.form for={:none} phx-change="search" class="flex flex-col">
-<div>
-    <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="500" placeholder="Search..." />
+<.form for={:none} phx-change="search" class="flex flex-col gap-2">
+    <div>
+        <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="500" placeholder="Search..." />
 
-    <%= if @search_results != [] do %>
-        <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
-            <%= for search_result <- @search_results do %>
-            <div class="cursor-pointer p-2 hover:bg-gray-200 focus:bg-gray-200" phx-click="pick" phx-value-name={elem(search_result, 1)} phx-value-code={elem(search_result, 2)}>
-                <%= elem(search_result, 1) %>
+        <%= if @search_results != [] do %>
+            <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
+                <%= for search_result <- @search_results do %>
+                <div class="cursor-pointer p-2 hover:bg-gray-200 focus:bg-gray-200" phx-click="pick" phx-value-name={elem(search_result, 1)} phx-value-code={elem(search_result, 2)}>
+                    <%= elem(search_result, 1) %>
+                </div>
+                <% end %>
             </div>
-            <% end %>
-        </div>
-    <% end %>
-</div>
-<div>
-    <%= if @selected_stations != [] do %>
-        <%= for {station, _} <- @selected_stations do %>
-            <%= station %>
         <% end %>
-    <% end %>
+    </div>
+    <div>
+        <%= if @selected_stations != [] do %>
+            <%= for {station, code} <- @selected_stations do %>
+                <div class="btn btn-sm rounded-full gap-2" phx-click="remove" phx-value-code={code}>
+                    <FontAwesome.LiveView.icon name="xmark" type="solid" class="h-6 w-6" />
+                    <%= station %>
+                </div>
+            <% end %>
+        <% end %>
     </div>
 </.form>

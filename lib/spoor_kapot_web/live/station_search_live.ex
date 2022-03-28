@@ -5,8 +5,8 @@ defmodule SpoorKapotWeb.StationSearchLive do
   def mount(_params, _session, socket) do
     assigns = [
       conn: socket,
-      search_results: search("amst"),
-      search_phrase: "amst",
+      search_results: [],
+      search_phrase: "",
       selected_stations: []
     ]
 
@@ -31,6 +31,20 @@ defmodule SpoorKapotWeb.StationSearchLive do
       search_results: [],
       search_phrase: "",
       selected_stations: [{name, code} | selected]
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event(
+        "remove",
+        %{"code" => code},
+        %{assigns: %{selected_stations: selected}} = socket
+      ) do
+    Logger.info("Removing #{code} from #{inspect(selected)}")
+
+    assigns = [
+      selected_stations: Enum.reject(selected, &match?({_, ^code}, &1))
     ]
 
     {:noreply, assign(socket, assigns)}
