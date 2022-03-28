@@ -49,7 +49,10 @@ defmodule SpoorKapot.MixProject do
       {:pockets, "~> 1.2"},
       {:seqfuzz, "~> 0.2.0"},
       {:unicode_transform, git: "https://github.com/bo0tzz/unicode_transform.git"},
-      {:ex_fontawesome, "~> 0.7.1"}
+      {:ex_fontawesome, "~> 0.7.1"},
+      {:dotenvy, "~> 0.6.0"},
+      {:tesla, "~> 1.4"},
+      {:hackney, "~> 1.17"}
     ]
   end
 

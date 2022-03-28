@@ -1,4 +1,5 @@
 import Config
+import Dotenvy
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -11,6 +12,11 @@ import Config
 if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
   config :spoor_kapot, SpoorKapotWeb.Endpoint, server: true
 end
+
+source!([".env", System.get_env()])
+
+config :spoor_kapot, SpoorKapot.NsApi,
+  api_key: env!("NS_API_KEY", :string!)
 
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.

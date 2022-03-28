@@ -22,7 +22,7 @@ defmodule SpoorKapot.NsApi.Station do
     Pockets.get(:stations, code)
   end
 
-  defp ensure_loaded() do
+  def ensure_loaded() do
     case Pockets.size(:stations) do
       :undefined ->
         Pockets.Registry.unregister(:stations)
@@ -40,10 +40,10 @@ defmodule SpoorKapot.NsApi.Station do
   defp load_stations() do
     Pockets.new(:stations)
 
+    {:ok, %{body: stations}} = SpoorKapot.NsApi.client() |> Tesla.get("/v2/stations")
+
     map =
-      File.read!("stations.json")
-      |> Jason.decode!()
-      |> Map.get("payload")
+      stations["payload"]
       |> Enum.map(&SpoorKapot.NsApi.Station.new/1)
       |> Enum.map(fn %{code: code} = station -> {code, station} end)
       |> Enum.into(%{})
