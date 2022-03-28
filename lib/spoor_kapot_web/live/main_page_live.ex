@@ -53,13 +53,21 @@ defmodule SpoorKapotWeb.MainPageLive do
   end
 
   def handle_event("set-focus", %{"key" => "ArrowUp"}, socket) do
-    current_focus = Enum.max([socket.assigns.current_focus - 1, 0])
+    current_focus =
+      case socket.assigns.current_focus - 1 do
+        index when index < 0 -> length(socket.assigns.search_results) - 1
+        index -> index
+      end
+
     {:noreply, assign(socket, current_focus: current_focus)}
   end
 
   def handle_event("set-focus", %{"key" => "ArrowDown"}, socket) do
     current_focus =
-      Enum.min([socket.assigns.current_focus + 1, length(socket.assigns.search_results) - 1])
+      case socket.assigns.current_focus + 1 do
+        index when index > length(socket.assigns.search_results) - 1 -> 0
+        index -> index
+      end
 
     {:noreply, assign(socket, current_focus: current_focus)}
   end
@@ -85,6 +93,6 @@ defmodule SpoorKapotWeb.MainPageLive do
     """
   end
 
-  # def focused_station(_, -1), do: nil
+  def focused_station(_, -1), do: nil
   def focused_station(stations, index), do: Enum.at(stations, index)
 end
