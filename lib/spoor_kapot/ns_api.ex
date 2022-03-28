@@ -3,6 +3,10 @@ defmodule SpoorKapot.NsApi do
     SpoorKapot.NsApi.Station.stations()
   end
 
+  def disruptions() do
+    SpoorKapot.NsApi.Disruption.disruptions()
+  end
+
   defp key() do
     Application.fetch_env!(:spoor_kapot, __MODULE__)[:api_key]
   end

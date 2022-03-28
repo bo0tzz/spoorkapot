@@ -7,10 +7,12 @@ defmodule SpoorKapot.Application do
 
   @impl true
   def start(_type, _args) do
-    db_file = Application.fetch_env!(:spoor_kapot, :database_file)
+    db_file =
+      Application.fetch_env!(:spoor_kapot, :database_folder) |> Path.join("/subscriptions.dets")
+
     {:ok, :subscriptions} = Pockets.open(:subscriptions, db_file, create?: true)
 
-    SpoorKapot.NsApi.Station.ensure_loaded()
+    # SpoorKapot.NsApi.Station.ensure_loaded()
 
     children = [
       # Start the Telemetry supervisor
