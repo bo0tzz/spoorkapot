@@ -1,13 +1,11 @@
-<.form for={:none} phx-change="search" class="flex flex-col gap-2">
-    <div>
+<.form for={:none} phx-change="search" phx-submit="submit" class="flex flex-col gap-2">
+    <div phx-window-keydown="set-focus">
         <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="300" placeholder="Search..." />
 
         <%= if @search_results != [] do %>
             <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
-                <%= for %{name: name, code: code} <- @search_results do %>
-                <div class="cursor-pointer p-2 hover:bg-gray-200 focus:bg-gray-200" phx-click="pick" phx-value-code={code}>
-                    <%= name %>
-                </div>
+                <%= for {station, idx} <- Enum.with_index(@search_results) do %>
+                    <.search_item station={station} focused={idx == @current_focus} />
                 <% end %>
             </div>
         <% end %>

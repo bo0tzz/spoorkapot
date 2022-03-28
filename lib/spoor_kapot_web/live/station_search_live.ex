@@ -7,7 +7,8 @@ defmodule SpoorKapotWeb.StationSearchLive do
       conn: socket,
       search_results: [],
       search_phrase: "",
-      selected_stations: []
+      selected_stations: [],
+      current_focus: -1
     ]
 
     {:ok, assign(socket, assigns)}
@@ -32,6 +33,7 @@ defmodule SpoorKapotWeb.StationSearchLive do
     assigns = [
       search_results: [],
       search_phrase: "",
+      current_focus: -1,
       selected_stations: [station | selected]
     ]
 
@@ -50,5 +52,36 @@ defmodule SpoorKapotWeb.StationSearchLive do
     {:noreply, assign(socket, assigns)}
   end
 
-  def handle_event("submit", _, socket), do: {:noreply, socket} # Prevent form submit
+  def handle_event("set-focus", %{"key" => "ArrowUp"}, socket) do
+    current_focus = Enum.max([socket.assigns.current_focus - 1, 0])
+    {:noreply, assign(socket, current_focus: current_focus)}
+  end
+
+  def handle_event("set-focus", %{"key" => "ArrowDown"}, socket) do
+    current_focus =
+      Enum.min([socket.assigns.current_focus + 1, length(socket.assigns.search_results) - 1])
+
+    {:noreply, assign(socket, current_focus: current_focus)}
+  end
+
+  def handle_event("set-focus", %{"key" => "Enter"}, socket) do
+    case Enum.at(socket.assigns.search_results, socket.assigns.current_focus) do
+      nil -> {:noreply, socket}
+      station -> handle_event("pick", %{"code" => station.code}, socket)
+    end
+  end
+
+  def handle_event("set-focus", _, socket), do: {:noreply, socket}
+  def handle_event("submit", _, socket), do: {:noreply, socket}
+
+  def search_item(%{focused: focused} = assigns) do
+    class_base = ["cursor-pointer", "p-2", "hover:bg-gray-200", "focus:bg-gray-200"]
+    class = if focused, do: ["bg-gray-200" | class_base], else: class_base
+
+    ~H"""
+      <div class={class} phx-value-code={@station.code} phx-click="pick">
+        <%= @station.name %>
+      </div>
+    """
+  end
 end
