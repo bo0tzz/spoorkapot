@@ -3,42 +3,18 @@ defmodule SpoorKapot.Notifications do
 
   @known_disruptions_filename "disruptions.bin"
 
-  def send_notifications() do
+  def run() do
     known_disruptions = load_known_disruptions()
     disruptions = SpoorKapot.NsApi.disruptions()
 
-    Enum.reject(disruptions, &(&1.id in known_disruptions))
-    |> case do
+    case Enum.reject(disruptions, &(&1.id in known_disruptions)) do
       [] ->
         Logger.info("No new disruptions")
 
       new_disruptions ->
         Logger.info("#{Enum.count(new_disruptions)} new disruptions")
 
-        disrupted_stations =
-          Enum.map(new_disruptions, fn %{id: id, affected_stations: affected_stations} ->
-            {id, MapSet.new(affected_stations, & &1.code)}
-          end)
-
-        # send notifications
-        SpoorKapot.Subscription.all()
-        |> Enum.each(fn {_, %{push: push, stations: stations}} ->
-          Enum.reject(disrupted_stations, fn {_id, codes} -> MapSet.disjoint?(codes, stations) end)
-          |> Enum.each(fn {id, _codes} ->
-            Logger.info("Sending notification for ID #{id}")
-
-            msg =
-              %SpoorKapot.PushMessage{
-                title: id,
-                url:
-                  "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/detail?id=" <>
-                    id
-              }
-              |> Jason.encode!()
-
-            WebPushEncryption.send_web_push(msg, push)
-          end)
-        end)
+        send_notifications(new_disruptions)
 
         disruptions
         |> Enum.map(& &1.id)
@@ -46,7 +22,40 @@ defmodule SpoorKapot.Notifications do
     end
   end
 
-  def load_known_disruptions() do
+  defp send_notifications(disruptions) do
+    disruptions =
+      Enum.map(disruptions, fn disruption ->
+        {disruption.id, disruption.title, MapSet.new(disruption.affected_stations, & &1.code)}
+      end)
+
+    Enum.each(SpoorKapot.Subscription.all(), &notify_subscription(&1, disruptions))
+  end
+
+  defp notify_subscription({subscription_key, subscription}, disruptions) do
+    disruptions
+    |> Enum.reject(fn {_, _, codes} -> MapSet.disjoint?(codes, subscription.stations) end)
+    |> Enum.each(fn {id, title, _} ->
+      msg =
+        %SpoorKapot.PushMessage{
+          title: title,
+          url: "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/detail?id=" <> id
+        }
+        |> Jason.encode!()
+
+      case WebPushEncryption.send_web_push(msg, subscription.push) do
+        {:ok, %{status_code: status}} when status in [200, 201] ->
+          :ok
+
+        {:ok, %{status_code: status}} when status in [404, 410] ->
+          SpoorKapot.Subscription.delete(subscription_key)
+
+        error ->
+          Logger.warning("Unexpected error when sending push message: #{inspect(error)}")
+      end
+    end)
+  end
+
+  defp load_known_disruptions() do
     with folder <- Application.fetch_env!(:spoor_kapot, :database_folder),
          path <- Path.join(folder, @known_disruptions_filename),
          {:ok, bin} <- File.read(path) do
@@ -56,7 +65,7 @@ defmodule SpoorKapot.Notifications do
     end
   end
 
-  def save_known_disruptions(disruptions) do
+  defp save_known_disruptions(disruptions) do
     with folder <- Application.fetch_env!(:spoor_kapot, :database_folder),
          path <- Path.join(folder, @known_disruptions_filename),
          bin <- :erlang.term_to_binary(disruptions) do
@@ -64,7 +73,7 @@ defmodule SpoorKapot.Notifications do
     end
   end
 
-  def bin_to_term(bin) do
+  defp bin_to_term(bin) do
     try do
       :erlang.binary_to_term(bin)
     rescue
