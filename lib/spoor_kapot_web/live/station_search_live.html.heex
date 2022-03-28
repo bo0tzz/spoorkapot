@@ -4,9 +4,9 @@
 
         <%= if @search_results != [] do %>
             <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
-                <%= for search_result <- @search_results do %>
-                <div class="cursor-pointer p-2 hover:bg-gray-200 focus:bg-gray-200" phx-click="pick" phx-value-name={elem(search_result, 1)} phx-value-code={elem(search_result, 2)}>
-                    <%= elem(search_result, 1) %>
+                <%= for %{name: name, code: code} <- @search_results do %>
+                <div class="cursor-pointer p-2 hover:bg-gray-200 focus:bg-gray-200" phx-click="pick" phx-value-code={code}>
+                    <%= name %>
                 </div>
                 <% end %>
             </div>
@@ -14,10 +14,10 @@
     </div>
     <div>
         <%= if @selected_stations != [] do %>
-            <%= for {station, code} <- @selected_stations do %>
+            <%= for %{name: name, code: code} <- @selected_stations do %>
                 <div class="btn btn-sm rounded-full gap-2" phx-click="remove" phx-value-code={code}>
                     <FontAwesome.LiveView.icon name="xmark" type="solid" class="h-6 w-6" />
-                    <%= station %>
+                    <%= name %>
                 </div>
             <% end %>
         <% end %>

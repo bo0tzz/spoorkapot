@@ -6,8 +6,14 @@ defmodule SpoorKapot.StationSearch do
     metadata: false
   ]
 
+  def find_stations(""), do: []
+
   def find_stations(query) do
     normalized_query = Unicode.Transform.LatinAscii.transform(query)
-    Seqfuzz.matches(@stations, normalized_query, &elem(&1, 0), @seqfuzz_opts)
+
+    Map.values(@stations)
+    |> Seqfuzz.matches(normalized_query, & &1.normalized_name, @seqfuzz_opts)
   end
+
+  def stations(), do: @stations
 end
