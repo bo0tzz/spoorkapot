@@ -10,6 +10,8 @@ defmodule SpoorKapot.Application do
     db_file = Application.fetch_env!(:spoor_kapot, :database_file)
     {:ok, :subscriptions} = Pockets.open(:subscriptions, db_file, create?: true)
 
+    SpoorKapot.NsApi.Station.ensure_loaded()
+
     children = [
       # Start the Telemetry supervisor
       SpoorKapotWeb.Telemetry,
