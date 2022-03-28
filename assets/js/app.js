@@ -9,7 +9,7 @@ liveSocket.connect()
 
 const vapidKey = JSON.parse(document.getElementById("vapid-key").text)
 
-function registerWorker() {
+function registerWorker(stations) {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(registration => {
             registration.pushManager.subscribe({ userVisibleOnly: true, ...vapidKey })
@@ -19,7 +19,10 @@ function registerWorker() {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(subscription)
+                        body: JSON.stringify({
+                            subscription: subscription,
+                            stations: stations
+                        })
                     })
                 })
         })
@@ -28,4 +31,5 @@ function registerWorker() {
     }
 }
 
-document.getElementById("foo-button").addEventListener("click", registerWorker)
+window.addEventListener("phx:register", e => registerWorker(e.detail.stations))
+
