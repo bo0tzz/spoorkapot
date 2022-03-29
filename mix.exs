@@ -53,7 +53,8 @@ defmodule SpoorKapot.MixProject do
       {:dotenvy, "~> 0.6.0"},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:heex_formatter, github: "feliperenan/heex_formatter"}
+      {:heex_formatter, github: "feliperenan/heex_formatter"},
+      {:quantum, "~> 3.4"}
     ]
   end
 

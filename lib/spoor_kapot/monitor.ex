@@ -1,4 +1,5 @@
 defmodule SpoorKapot.Monitor do
+  use Quantum, otp_app: :spoor_kapot
   require Logger
 
   @known_disruptions_filename "disruptions.bin"

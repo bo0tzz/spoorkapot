@@ -14,6 +14,11 @@ config :spoor_kapot, SpoorKapotWeb.Endpoint,
   pubsub_server: SpoorKapot.PubSub,
   live_view: [signing_salt: "TtVjcN1G"]
 
+config :spoor_kapot, SpoorKapot.Monitor,
+  jobs: [
+    {"*/10 * * * *", {SpoorKapot.Monitor, :run, []}}
+  ]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.0",

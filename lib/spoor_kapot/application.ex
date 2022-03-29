@@ -20,9 +20,8 @@ defmodule SpoorKapot.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: SpoorKapot.PubSub},
       # Start the Endpoint (http/https)
-      SpoorKapotWeb.Endpoint
-      # Start a worker by calling: SpoorKapot.Worker.start_link(arg)
-      # {SpoorKapot.Worker, arg}
+      SpoorKapotWeb.Endpoint,
+      SpoorKapot.Monitor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
