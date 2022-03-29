@@ -26,6 +26,7 @@ defmodule SpoorKapot.Subscription do
   def new(_), do: :error
 
   def store(%SpoorKapot.Subscription{push: %{endpoint: endpoint}} = sub) do
+    Logger.info("Storing new subscription")
     Pockets.put(:subscriptions, endpoint, sub)
   end
 

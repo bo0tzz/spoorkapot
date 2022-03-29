@@ -5,6 +5,7 @@ defmodule SpoorKapot.Monitor do
   @known_disruptions_filename "disruptions.bin"
 
   def run() do
+    Logger.info("Running notifications task")
     known_disruptions = load_known_disruptions()
     disruptions = SpoorKapot.NsApi.disruptions()
 
@@ -33,27 +34,33 @@ defmodule SpoorKapot.Monitor do
   end
 
   defp notify_subscription({subscription_key, subscription}, disruptions) do
-    disruptions
-    |> Enum.reject(fn {_, _, codes} -> MapSet.disjoint?(codes, subscription.stations) end)
-    |> Enum.each(fn {id, title, _} ->
-      msg =
-        %SpoorKapot.PushMessage{
-          title: title,
-          url: "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/detail?id=" <> id
-        }
-        |> Jason.encode!()
+    sent_notifications =
+      disruptions
+      |> Enum.reject(fn {_, _, codes} -> MapSet.disjoint?(codes, subscription.stations) end)
+      |> Enum.map(fn {id, title, _} ->
+        msg =
+          %SpoorKapot.PushMessage{
+            title: title,
+            url: "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/detail?id=" <> id
+          }
+          |> Jason.encode!()
 
-      case WebPushEncryption.send_web_push(msg, subscription.push) do
-        {:ok, %{status_code: status}} when status in [200, 201] ->
-          :ok
+        case WebPushEncryption.send_web_push(msg, subscription.push) do
+          {:ok, %{status_code: status}} when status in [200, 201] ->
+            :sent
 
-        {:ok, %{status_code: status}} when status in [404, 410] ->
-          SpoorKapot.Subscription.delete(subscription_key)
+          {:ok, %{status_code: status}} when status in [404, 410] ->
+            SpoorKapot.Subscription.delete(subscription_key)
+            :deleted
 
-        error ->
-          Logger.warning("Unexpected error when sending push message: #{inspect(error)}")
-      end
-    end)
+          error ->
+            Logger.warning("Unexpected error when sending push message: #{inspect(error)}")
+            :error
+        end
+      end)
+      |> Enum.count(&match?(:sent, &1))
+
+    Logger.info("Sent #{sent_notifications} notifications")
   end
 
   defp load_known_disruptions() do
