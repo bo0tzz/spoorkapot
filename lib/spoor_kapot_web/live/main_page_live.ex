@@ -15,9 +15,16 @@ defmodule SpoorKapotWeb.MainPageLive do
   end
 
   def handle_event("register", _, socket) do
-    # TODO: Display error if selected_stations is empty
-    codes = Enum.map(socket.assigns.selected_stations, & &1.code)
-    {:noreply, push_event(socket, "register", %{stations: codes})}
+    socket.assigns.selected_stations
+    |> case do
+      # TODO: Display error if selected_stations is empty
+      [] ->
+        {:noreply, socket}
+
+      stations ->
+        codes = Enum.map(stations, & &1.code)
+        {:noreply, push_event(socket, "register", %{stations: codes})}
+    end
   end
 
   def handle_event("search", %{"search_phrase" => search_phrase}, socket) do
