@@ -50,7 +50,7 @@ COPY priv priv
 # step down so that `lib` is available.
 COPY assets assets
 
-RUN npm ci --progress=false --no-audit --loglevel=error
+RUN npm ci --prefix ./assets --progress=false --no-audit --loglevel=error
 
 # compile assets
 RUN mix assets.deploy
