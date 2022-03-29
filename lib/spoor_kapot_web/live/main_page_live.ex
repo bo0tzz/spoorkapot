@@ -40,7 +40,7 @@ defmodule SpoorKapotWeb.MainPageLive do
       search_results: [],
       search_phrase: "",
       current_focus: -1,
-      selected_stations: [station | selected]
+      selected_stations: selected ++ [station]
     ]
 
     {:noreply, assign(socket, assigns)}
@@ -65,7 +65,12 @@ defmodule SpoorKapotWeb.MainPageLive do
         index -> index
       end
 
-    {:noreply, assign(socket, current_focus: current_focus)}
+    socket =
+      socket
+      |> assign(current_focus: current_focus)
+      |> push_event("scroll_into_view", %{id: "search-result-#{current_focus}"})
+
+    {:noreply, socket}
   end
 
   def handle_event("set-focus", %{"key" => "ArrowDown"}, socket) do
@@ -75,7 +80,12 @@ defmodule SpoorKapotWeb.MainPageLive do
         index -> index
       end
 
-    {:noreply, assign(socket, current_focus: current_focus)}
+    socket =
+      socket
+      |> assign(current_focus: current_focus)
+      |> push_event("scroll_into_view", %{id: "search-result-#{current_focus}"})
+
+    {:noreply, socket}
   end
 
   def handle_event("set-focus", %{"key" => "Enter"}, socket) do
@@ -93,7 +103,7 @@ defmodule SpoorKapotWeb.MainPageLive do
     class = if focused, do: ["bg-gray-200" | class_base], else: class_base
 
     ~H"""
-      <div class={class} phx-value-code={@station.code} phx-click="pick">
+    <div class={class} id={"search-result-#{@idx}"} phx-value-code={@station.code} phx-click="pick">
         <%= @station.name %>
       </div>
     """

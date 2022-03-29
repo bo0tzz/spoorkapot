@@ -32,4 +32,4 @@ function registerWorker(stations) {
 }
 
 window.addEventListener("phx:register", e => registerWorker(e.detail.stations))
-
+window.addEventListener("phx:scroll_into_view", e => document.getElementById(e.detail.id).scrollIntoView({ block: "nearest" }))
