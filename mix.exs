@@ -52,7 +52,8 @@ defmodule SpoorKapot.MixProject do
       {:ex_fontawesome, "~> 0.7.1"},
       {:dotenvy, "~> 0.6.0"},
       {:tesla, "~> 1.4"},
-      {:hackney, "~> 1.17"}
+      {:hackney, "~> 1.17"},
+      {:heex_formatter, github: "feliperenan/heex_formatter"}
     ]
   end
 

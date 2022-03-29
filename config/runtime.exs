@@ -15,8 +15,7 @@ end
 
 source!([".env", System.get_env()])
 
-config :spoor_kapot, SpoorKapot.NsApi,
-  api_key: env!("NS_API_KEY", :string!)
+config :spoor_kapot, SpoorKapot.NsApi, api_key: env!("NS_API_KEY", :string!)
 
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
