@@ -104,8 +104,8 @@ defmodule SpoorKapotWeb.MainPageLive do
 
     ~H"""
     <div class={class} id={"search-result-#{@idx}"} phx-value-code={@station.code} phx-click="pick">
-        <%= @station.name %>
-      </div>
+      <%= @station.name %>
+    </div>
     """
   end
 
