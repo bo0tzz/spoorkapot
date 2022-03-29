@@ -1,26 +1,48 @@
-<div class="flex m-6 justify-center">
-    <.form for={:none} phx-change="search" phx-submit="submit" class="flex flex-col gap-2">
-        <div phx-window-keydown="set-focus">
-            <input type="text" autocomplete="off" class="input input-bordered" name="search_phrase" value={@search_phrase} phx-debounce="300" placeholder="Search..." />
-
-            <%= if @search_results != [] do %>
-                <div class="absolute border border-gray-500 rounded py-2 bg-base-100 p-2">
-                    <%= for {station, idx} <- Enum.with_index(@search_results) do %>
-                        <.search_item station={station} focused={idx == @current_focus} />
-                    <% end %>
-                </div>
+<div class="hero min-h-screen content-start mt-8" phx-window-keydown="set-focus">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Login now!</h1>
+      <p class="py-6">Provident cupiditate voluptatem et in.</p>
+    </div>
+    <div class="card flex-shrink-0 w-full max-w-sm bg-base-200 overflow-visible">
+      <.form for={:none} phx-change="search" phx-submit="submit" class="card-body">
+        <%= if @selected_stations != [] do %>
+          <div class="flex flex-wrap gap-1">
+            <%= for %{name: name, code: code} <- @selected_stations do %>
+              <div
+                class="badge btn btn-sm rounded-full gap-2"
+                phx-click="remove"
+                phx-value-code={code}
+              >
+                <FontAwesome.LiveView.icon name="xmark" type="solid" class="h-6 w-6" />
+                <%= name %>
+              </div>
             <% end %>
+          </div>
+        <% end %>
+        <div class="form-control">
+          <div class="input-group">
+            <input
+              type="text"
+              autocomplete="off"
+              class="input input-bordered"
+              name="search_phrase"
+              value={@search_phrase}
+              phx-debounce="300"
+              placeholder="Search..."
+            />
+            <button class="btn btn-primary" phx-click="register" type="button">Register</button>
+          </div>
+          <%= if @search_results != [] do %>
+            <!-- TODO: Scroll in search results -->
+            <div class="absolute mt-12 overflow-y-auto max-h-60 border border-gray-700 rounded bg-base-100 p-2 z-50">
+              <%= for {station, idx} <- Enum.with_index(@search_results) do %>
+                <.search_item station={station} focused={idx == @current_focus} />
+              <% end %>
+            </div>
+          <% end %>
         </div>
-        <div>
-            <%= if @selected_stations != [] do %>
-                <%= for %{name: name, code: code} <- @selected_stations do %>
-                    <div class="btn btn-sm rounded-full gap-2" phx-click="remove" phx-value-code={code}>
-                        <FontAwesome.LiveView.icon name="xmark" type="solid" class="h-6 w-6" />
-                        <%= name %>
-                    </div>
-                <% end %>
-            <% end %>
-        </div>
-    </.form>
-    <button class="btn btn-primary" phx-click="register">Register</button>
+      </.form>
+    </div>
+  </div>
 </div>
