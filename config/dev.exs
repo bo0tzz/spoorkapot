@@ -55,12 +55,6 @@ config :spoor_kapot, SpoorKapotWeb.Endpoint,
     ]
   ]
 
-config :web_push_encryption, :vapid_details,
-  subject: "https://github.com/bo0tzz/spoorkapot",
-  public_key:
-    "BKJbAYqEiK5l7OSqiTTnjgPH5A1n-2agRDG_LrqtzExvzK9Wt9weGS0xcDh4J5EpODL3OFrRjEgozPa6uCnG_h0",
-  private_key: "xbGTJsSGTynCujwUwdF7hHdkbSkaKF85yGMKOfKjD40"
-
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
@@ -70,5 +64,3 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
-
-config :spoor_kapot, :database_folder, "./"

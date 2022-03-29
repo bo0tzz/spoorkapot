@@ -1,6 +1,8 @@
 import Config
 import Dotenvy
 
+source!([".env", System.get_env()])
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration
@@ -13,9 +15,16 @@ if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
   config :spoor_kapot, SpoorKapotWeb.Endpoint, server: true
 end
 
-source!([".env", System.get_env()])
-
 config :spoor_kapot, SpoorKapot.NsApi, api_key: env!("NS_API_KEY", :string!)
+config :spoor_kapot, :database_folder, env!("DB_FOLDER", :string, "./")
+
+push_pubkey = env!("PUSH_PUBLIC_KEY", :string)
+push_privkey = env!("PUSH_PRIVATE_KEY", :string)
+
+config :web_push_encryption, :vapid_details,
+  subject: "https://github.com/bo0tzz/spoorkapot",
+  public_key: push_pubkey,
+  private_key: push_privkey
 
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
@@ -30,8 +39,8 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "4000")
+  host = env!("PHX_HOST", :string, "spoorkapot.bo0tzz.me")
+  port = env!("PORT", :integer, 80)
 
   config :spoor_kapot, SpoorKapotWeb.Endpoint,
     url: [host: host, port: 443],
