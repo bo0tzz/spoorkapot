@@ -12,7 +12,7 @@ defmodule SpoorKapot.Application do
 
     {:ok, :subscriptions} = Pockets.open(:subscriptions, db_file, create?: true)
 
-    # SpoorKapot.NsApi.Station.ensure_loaded()
+    SpoorKapot.NsApi.Station.ensure_loaded()
 
     children = [
       # Start the Telemetry supervisor
