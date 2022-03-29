@@ -17,6 +17,13 @@
     </script>
   </head>
   <body>
-    <%= @inner_content %>
+    <main>
+      <%= @inner_content %>
+    </main>
+    <footer class="footer p-4 fixed bottom-0">
+      <div>
+        <a class="link link-hover" href="https://github.com/bo0tzz/spoorkapot">by bo0tzz © <%= DateTime.utc_now.year %></a>
+      </div>
+    </footer>
   </body>
 </html>
