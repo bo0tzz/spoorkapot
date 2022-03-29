@@ -23,6 +23,7 @@
         <div class="form-control">
           <div class="input-group">
             <input
+              id="search-input"
               type="text"
               autocomplete="off"
               class="input input-bordered"
@@ -34,8 +35,9 @@
             <button class="btn btn-primary" phx-click="register" type="button">Register</button>
           </div>
           <%= if @search_results != [] do %>
-            <!-- TODO: Scroll in search results -->
-            <div class="absolute mt-12 overflow-y-auto max-h-60 border border-gray-700 rounded bg-base-100 p-2 z-50">
+            <div
+              class="absolute mt-12 overflow-y-auto max-h-60 border border-gray-700 rounded bg-base-100 p-2 z-50"
+            >
               <%= for {station, idx} <- Enum.with_index(@search_results) do %>
                 <.search_item station={station} focused={idx == @current_focus} idx={idx} />
               <% end %>
@@ -46,3 +48,16 @@
     </div>
   </div>
 </div>
+
+<input type="checkbox" id="confirm-modal" class="modal-toggle" />
+<label for="confirm-modal" class="modal cursor-pointer">
+  <label class="modal-box" for="">
+    <h3 class="text-lg font-bold">Registration successful</h3>
+    <p class="py-4">
+      You will now get notifications when there are disruptions involving your selected stations!
+    </p>
+    <div class="modal-action">
+      <label for="confirm-modal" class="btn">Yay!</label>
+    </div>
+  </label>
+</label>

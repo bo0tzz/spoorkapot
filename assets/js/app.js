@@ -24,10 +24,11 @@ function registerWorker(stations) {
                             stations: stations
                         })
                     })
-                })
+                    document.getElementById("confirm-modal").checked = true
+                }).catch((error) => alert(error.message))
         })
 
-        navigator.serviceWorker.register('/assets/sw.js', { scope: "../" }).then(console.log)
+        navigator.serviceWorker.register('/assets/sw.js', { scope: "../" })
     }
 }
 
