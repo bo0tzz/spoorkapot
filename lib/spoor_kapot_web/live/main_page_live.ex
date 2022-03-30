@@ -29,8 +29,12 @@ defmodule SpoorKapotWeb.MainPageLive do
   end
 
   def handle_event("search", %{"search_phrase" => search_phrase}, socket) do
+    results =
+      SpoorKapot.StationSearch.find_stations(search_phrase)
+      |> Enum.reject(&MapSet.member?(socket.assigns.selected_stations, &1))
+
     assigns = [
-      search_results: SpoorKapot.StationSearch.find_stations(search_phrase),
+      search_results: results,
       search_phrase: search_phrase
     ]
 
