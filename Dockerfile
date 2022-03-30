@@ -42,18 +42,15 @@ RUN mkdir config
 COPY config/config.exs config/${MIX_ENV}.exs config/
 RUN mix deps.compile
 
-COPY priv priv
+COPY lib lib
 
-RUN echo "force rebuild from here :)"
+COPY priv priv
 COPY assets assets
 
 RUN npm ci --prefix ./assets --progress=false --no-audit --loglevel=error
 
 # compile assets
 RUN mix assets.deploy
-
-# Compile the release
-COPY lib lib
 
 RUN mix compile
 
