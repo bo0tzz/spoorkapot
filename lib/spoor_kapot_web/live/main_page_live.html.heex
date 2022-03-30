@@ -1,8 +1,12 @@
 <div class="hero content-start mt-8" phx-window-keydown="set-focus">
   <div class="hero-content flex-col lg:flex-row-reverse">
-    <div class="text-center lg:text-left">
+    <div class="text-center max-w-sm lg:text-left">
       <h1 class="text-5xl font-bold">Spoor kapot</h1>
-      <p class="py-6">Provident cupiditate voluptatem et in.</p>
+      <p class="py-6">
+      This website will notify you if there are any disruptions on the Dutch rail network.<br/>
+      <b>Search for</b> and <b>select</b> the stations that you regularly travel through.<br/>
+      You will then be notified if there are any problems involving those stations.
+      </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm bg-base-200 overflow-visible">
       <.form for={:none} phx-change="search" phx-submit="submit" class="card-body">
