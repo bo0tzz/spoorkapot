@@ -16,7 +16,7 @@ if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
 end
 
 config :spoor_kapot, SpoorKapot.NsApi, api_key: env!("NS_API_KEY", :string!)
-config :spoor_kapot, :database_folder, env!("DB_FOLDER", :string, "./")
+config :spoor_kapot, :database_folder, env!("DATABASE_FOLDER", :string, "./")
 
 push_pubkey = env!("PUSH_PUBLIC_KEY", :string)
 push_privkey = env!("PUSH_PRIVATE_KEY", :string)
