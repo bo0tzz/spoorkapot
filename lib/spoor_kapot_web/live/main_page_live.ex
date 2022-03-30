@@ -7,7 +7,7 @@ defmodule SpoorKapotWeb.MainPageLive do
       conn: socket,
       search_results: [],
       search_phrase: "",
-      selected_stations: [],
+      selected_stations: MapSet.new(),
       current_focus: -1
     ]
 
@@ -47,7 +47,7 @@ defmodule SpoorKapotWeb.MainPageLive do
       search_results: [],
       search_phrase: "",
       current_focus: -1,
-      selected_stations: selected ++ [station]
+      selected_stations: MapSet.put(selected, station)
     ]
 
     {:noreply, assign(socket, assigns)}
@@ -58,8 +58,10 @@ defmodule SpoorKapotWeb.MainPageLive do
         %{"code" => code},
         %{assigns: %{selected_stations: selected}} = socket
       ) do
+    station = SpoorKapot.NsApi.Station.station(code)
+
     assigns = [
-      selected_stations: Enum.reject(selected, &match?(%{code: ^code}, &1))
+      selected_stations: MapSet.delete(selected, station)
     ]
 
     {:noreply, assign(socket, assigns)}
