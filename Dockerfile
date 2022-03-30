@@ -44,10 +44,7 @@ RUN mix deps.compile
 
 COPY priv priv
 
-# note: if your project uses a tool like https://purgecss.com/,
-# which customizes asset compilation based on what it finds in
-# your Elixir templates, you will need to move the asset compilation
-# step down so that `lib` is available.
+RUN echo "force rebuild from here :)"
 COPY assets assets
 
 RUN npm ci --prefix ./assets --progress=false --no-audit --loglevel=error
