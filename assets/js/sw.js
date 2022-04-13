@@ -10,5 +10,6 @@ self.addEventListener('push', pushEvent => {
     const title = data.title || "Spoor Kapot"
     const url = data.url || "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/"
 
-    self.registration.showNotification(title, {data: {url: url}})
+    const promise = self.registration.showNotification(title, { data: { url: url } })
+    pushEvent.waitUntil(promise)
 })
