@@ -44,7 +44,7 @@ defmodule SpoorKapot.Monitor do
       msg =
         %SpoorKapot.PushMessage{
           title: title,
-          url: "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/detail?id=" <> id
+          url: "https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/storing?id=" <> id
         }
         |> Jason.encode!()
 
